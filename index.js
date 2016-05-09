@@ -12,20 +12,20 @@ module.exports = function minimize (f, options) {
   var xMax = options.upperBound === undefined ? Infinity : options.upperBound;
   var maxIter = options.maxIter === undefined ? 100 : options.maxIter;
 
-  // Construct the best guess we can:
-  if (options.guess === undefined) {
-    if (xMin > -Infinity) {
-      x0 = xMax < Infinity ? 0.5 * (xMin + xMax) : xMin;
-    } else {
-      x0 = xMax < Infinity ? xMax : 0;
-    }
-  } else {
-    x0 = options.guess;
-  }
-
   if (isFinite(xMax) && isFinite(xMin)) {
     bounds = [xMin, xMax];
   } else {
+    // Construct the best guess we can:
+    if (options.guess === undefined) {
+      if (xMin > -Infinity) {
+        x0 = xMax < Infinity ? 0.5 * (xMin + xMax) : xMin;
+      } else {
+        x0 = xMax < Infinity ? xMax : 0;
+      }
+    } else {
+      x0 = options.guess;
+    }
+
     bounds = bracketMinimum(f, x0, dx, xMin, xMax, maxIter);
 
     if (isNaN(bounds[0]) || isNaN(bounds[1])) {

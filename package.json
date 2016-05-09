@@ -1,6 +1,6 @@
 {
   "name": "minimize-golden-section-1d",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "minimize-golden-section-1d",
   "main": "index.js",
   "scripts": {
