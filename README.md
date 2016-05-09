@@ -22,7 +22,7 @@ var minimize = require('minimize-golden-section-1d');
 minimize(Math.cos)
 // => 3.1415926622945616
 
-minimize(Math.cos, {upperBound: 1});
+minimize(Math.cos, {lowerBound: 0, upperBound: 1});
 // => 0.9999999956298697
 
 minimize(Math.cos, {guess: -3});
