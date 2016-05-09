@@ -1,10 +1,14 @@
 {
   "name": "minimize-golden-section-1d",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "minimize-golden-section-1d",
   "main": "index.js",
   "scripts": {
     "test": "semistandard && mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/scijs/minimize-golden-section-1d.git"
   },
   "keywords": [
     "scijs",
