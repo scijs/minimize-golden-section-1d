@@ -92,7 +92,7 @@ describe('minimize', function () {
     assert.almostEqual(minimize(function (x) { return -(x * (x - 2) * (x - 1)); }, {
       lowerBound: 0,
       upperBound: 3
-    }), (3 - Math.sqrt(3)) / 3);
+    }), 3);
   });
 
   it('minimizes a cubic against bounds', function () {
