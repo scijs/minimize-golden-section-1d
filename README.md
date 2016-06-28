@@ -6,7 +6,7 @@
 
 ## Introduction
 
-Minimize a function of a single variable using [golden section search](https://en.wikipedia.org/wiki/Golden_section_search), a search algorithm similar to bisection search except that the size of the intervals is chosen so that function evaluations can be reused more effectively. The golden section works fine with discontinuities, asymptotes, or oscillations that would throw off derivative-based methods but is somewhat slower to converge, ultimately requiring more function evaluations.
+Returns the argument that minimizes a function of a single variable using [golden section search](https://en.wikipedia.org/wiki/Golden_section_search), a search algorithm similar to bisection search except that the size of the intervals is chosen so that function evaluations can be reused more effectively. The golden section works fine with discontinuities, asymptotes, or oscillations that would throw off derivative-based methods but is somewhat slower to converge, likely requiring more function evaluations.
 
 ## Installation
 
@@ -16,6 +16,8 @@ $ npm install minimize-golden-section-1d
 
 ## Example
 
+Returns the argument that minimizes the function:
+
 ```javascript
 var minimize = require('minimize-golden-section-1d');
 
@@ -23,7 +25,7 @@ minimize(Math.cos)
 // => 3.1415926622945616
 
 minimize(Math.cos, {lowerBound: 0, upperBound: 1});
-// => 0.9999999956298697
+// => 1
 
 minimize(Math.cos, {guess: -3});
 // => -3.1415926432597825
