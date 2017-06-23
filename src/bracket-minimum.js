@@ -43,7 +43,7 @@ function bracketMinimum (f, x0, dx, xMin, xMax, maxIter) {
     // for the fact that we have *no* idea what floating point magnitude is
     // desirable. In order to avoid this, you should really provide *any
     // reasonable bounds at all* for the variables.
-    dx *= Math.exp(n * 0.5);
+    dx *= n < 4 ? 2 : Math.exp(n * 0.5);
 
     if (!isFinite(dx)) {
       return [-Infinity, Infinity];

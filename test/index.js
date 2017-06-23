@@ -130,6 +130,22 @@ describe('minimize', function () {
     assert.almostEqual(Math.cos(minimize(Math.cos)), -1);
   });
 
+  it('minimizes cosine', function () {
+    assert.almostEqual(minimize(Math.cos), Math.PI);
+  });
+
+  it('minimizes cosine', function () {
+    assert.almostEqual(minimize(Math.cos), Math.PI);
+  });
+
+  it('minimizes cosine', function () {
+    assert.almostEqual(minimize(Math.cos, {lowerBound: 0, upperBound: 1}), 1);
+  });
+
+  it('minimizes cosine', function () {
+    assert.almostEqual(minimize(Math.cos, {guess: -3}), -Math.PI);
+  });
+
   it('minimizes sine', function () {
     assert.almostEqual(minimize(Math.sin), -Math.PI * 0.5);
   });
