@@ -6,14 +6,14 @@ function bracketMinimum (f, x0, dx, xMin, xMax, maxIter) {
   // If either size is unbounded (=infinite), Expand the guess
   // range until we either bracket a minimum or until we reach the bounds:
   var fU, fL, fMin, n, xL, xU, bounded;
-  n = 0;
+  n = 1;
   xL = x0;
   xU = x0;
   fMin = fL = fU = f(x0);
-  while (!bounded && ++n < maxIter) {
+  while (!bounded && isFinite(dx) && !isNaN(dx)) {
+    ++n;
     bounded = true;
-    // Increase the increment:
-    dx *= 2;
+
     if (fL <= fMin) {
       fMin = fL;
       xL = Math.max(xMin, xL - dx);
@@ -38,11 +38,17 @@ function bracketMinimum (f, x0, dx, xMin, xMax, maxIter) {
     if ((fL === fMin && xL === xMin) || (fU === fMin && xU === xMax)) {
       bounded = true;
     }
+
+    // Increase the increment at a very quickly increasing rate to account
+    // for the fact that we have *no* idea what floating point magnitude is
+    // desirable. In order to avoid this, you should really provide *any
+    // reasonable bounds at all* for the variables.
+    dx *= Math.exp(n * 0.5);
+
+    if (!isFinite(dx)) {
+      return [-Infinity, Infinity];
+    }
   }
 
-  if (n === maxIter) {
-    return [NaN, NaN];
-  } else {
-    return [xL, xU];
-  }
+  return [xL, xU];
 }

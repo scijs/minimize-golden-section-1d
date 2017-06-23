@@ -35,7 +35,7 @@ minimize(Math.cos, {guess: -3});
 
 #### `require('minimize-golden-section-1d')(f[, options])`
 
-Given function `f` of one `Number`-valued variable, computes a local minimum. On successful completion, returns the value of the argument that minimizes `f` (note that this may either be a local or global minimum in the provided range). If tolerance is not met or the algorithm otherwise fails (e.g. NaN encountered or unconstrained divergence of the argument to `Infinity`), returns `NaN`.
+Given function `f` of one `Number`-valued variable, computes a local minimum. On successful completion, returns the value of the argument that minimizes `f` (note that this may either be a local or global minimum in the provided range). If the algorithm fails (e.g. NaN encountered or unconstrained divergence of the argument to `Infinity`), returns `NaN`. If tolerance is not met, returns best answer.
 
 If bounds are provided, this module proceeds immediately with golden section search. If upper, lower or both bounds are not provided, the algorithm will make use of an initial guess (a provided guess or just one of the bounds if that's all it has) and expand the search range until a minimum is bracketed.
 

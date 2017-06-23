@@ -38,7 +38,11 @@ function goldenSectionMinimize (f, xL, xU, tol, maxIter) {
     }
   }
 
-  if (n === maxIter || isNaN(f2) || isNaN(f1)) {
+  if (n === maxIter) {
+    return 0.5 * (f1 + f2);
+  }
+
+  if (isNaN(f2) || isNaN(f1)) {
     return NaN;
   }
 

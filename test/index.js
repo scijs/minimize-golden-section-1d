@@ -35,14 +35,12 @@ describe('minimize', function () {
     }), 0);
   });
 
-  it('Fails to minimize sqrt(x) in (-inf, inf)', function () {
-    assert.isNaN(minimize(Math.sqrt), 0);
+  it('Minimizes sqrt(|x|) in (-inf, inf)', function () {
+    assert.almostEqual(minimize(function (x) { return Math.sqrt(Math.abs(x)); }), 0);
   });
 
-  it('returns NaN if tolerance not met', function () {
-    assert.isNaN(minimize(function (x) { return x * (x - 2); }, {
-      tolerance: 0
-    }));
+  it('returns answer if tolerance not met', function () {
+    assert.almostEqual(minimize(function (x) { return x * (x - 2); }, {tolerance: 0}), -1);
   });
 
   it('minimizes a x(x-2) in (-inf, inf)', function () {
@@ -129,7 +127,7 @@ describe('minimize', function () {
   });
 
   it('minimizes cosine', function () {
-    assert.almostEqual(minimize(Math.cos), Math.PI);
+    assert.almostEqual(Math.cos(minimize(Math.cos)), -1);
   });
 
   it('minimizes sine', function () {
