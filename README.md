@@ -33,9 +33,9 @@ minimize(Math.cos, {guess: -3});
 
 ## Usage
 
-#### `require('minimize-golden-section-1d')(f[, options])`
+#### `require('minimize-golden-section-1d')(f[, options[, status]])`
 
-Given function `f` of one `Number`-valued variable, computes a local minimum. On successful completion, returns the value of the argument that minimizes `f` (note that this may either be a local or global minimum in the provided range). If the algorithm fails (e.g. NaN encountered or unconstrained divergence of the argument to `Infinity`), returns `NaN`. If tolerance is not met, returns best answer.
+Given function `f` of one `Number`-valued variable, computes a local minimum. On successful completion, returns the value of the argument that minimizes `f` (note that this may either be a local or global minimum in the provided range). If the algorithm fails (i.e. if max iterations exceeded, `NaN` encountered, or unbounded divergence of the argument to `Infinity`), returns `NaN`.
 
 If bounds are provided, this module proceeds immediately with golden section search. If upper, lower or both bounds are not provided, the algorithm will make use of an initial guess (a provided guess or just one of the bounds if that's all it has) and expand the search range until a minimum is bracketed.
 
@@ -43,9 +43,16 @@ If bounds are provided, this module proceeds immediately with golden section sea
 - `tolerance [=1e-8]`: Convergence tolerance. Algorithm continues until search interval is smaller than `tolerance`.
 - `lowerBound [=-Infinity]`: Lower bound of the search interval
 - `upperBound [=Infinity]`: Upper bound of the search interval
-- `maxIter [=100]`: Maximum number of iterations for either bracketing or search phase.
-- `guess [=0]`: initial guess for unconstrained minimization. Unused unless both `upperBound` and `lowerBound` are not provided.
-- `initialIncrement [=1]`: Initial interval by which to expand the search interval for unconstrained minimization. Unused unless both `upperBound` and `lowerBound` are not provided.
+- `maxIterations [=100]`: Maximum number of iterations for either bracketing or search phase.
+- `guess [=0]`: initial guess for unbounded minimization. Unused unless both `upperBound` and `lowerBound` are not provided.
+- `initialIncrement [=1]`: Initial interval by which to expand the search interval for unbounded minimization. Unused unless both `upperBound` and `lowerBound` are not provided.
+
+##### Status:
+If `status` object is provided, the following outputs are written in place:
+- `status.converged` (`Boolean`): `true` if algorithm succeeded
+- `status.iterations` (`Number`): number of iterations
+- `status.minimum` (`Number`): minimum value of the function achieved before exiting, whether the algorithm converged or not
+- `status.argmin` (`Number`): best guess of argmin achieved before exiting, whether the algorithm converged or not.
 
 ## License
 &copy; 2015 [Scijs](https://github.com/scijs). MIT License.

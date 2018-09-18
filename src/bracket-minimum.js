@@ -2,7 +2,7 @@
 
 module.exports = bracketMinimum;
 
-function bracketMinimum (f, x0, dx, xMin, xMax, maxIter) {
+function bracketMinimum (bounds, f, x0, dx, xMin, xMax, maxIter) {
   // If either size is unbounded (=infinite), Expand the guess
   // range until we either bracket a minimum or until we reach the bounds:
   var fU, fL, fMin, n, xL, xU, bounded;
@@ -46,9 +46,13 @@ function bracketMinimum (f, x0, dx, xMin, xMax, maxIter) {
     dx *= n < 4 ? 2 : Math.exp(n * 0.5);
 
     if (!isFinite(dx)) {
-      return [-Infinity, Infinity];
+      bounds[0] = -Infinity;
+      bounds[1] = Infinity;
+      return bounds;
     }
   }
 
-  return [xL, xU];
+  bounds[0] = xL;
+  bounds[1] = xU;
+  return bounds;
 }
