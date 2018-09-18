@@ -12,18 +12,47 @@ function assertAlmostEqual (t, computed, expected, tol) {
 
 test('minimize', function (t) {
   t.test('Minimizes 1 / (x - 1) in [0, 2]', function (t) {
+    var status = {};
     assertAlmostEqual(t, minimize(function (x) { return 1 / (x - 1); }, {
       lowerBound: 0,
       upperBound: 2
-    }), 1);
+    }, status), 1);
+    t.ok(status.converged);
     t.end();
   });
 
   t.test('Minimizes -1 / (x - 1) in [0, 2]', function (t) {
+    var status = {};
     assertAlmostEqual(t, minimize(function (x) { return -1 / (x - 1); }, {
       lowerBound: 0,
       upperBound: 2
-    }), 1);
+    }, status), 1);
+    t.equal(status.iterations, 41);
+    assertAlmostEqual(t, status.argmin, 1);
+    t.ok(status.converged);
+    t.end();
+  });
+
+  t.test('Bails out on unbounded minimization of -x^2', function (t) {
+    var status = {};
+    minimize(function (x) {
+      return -x * x;
+    }, null, status);
+    t.ok(isNaN(status.argmin));
+    t.ok(isNaN(status.minimum));
+    t.notOk(status.converged);
+    t.end();
+  });
+
+  t.test('Succeeds out on bounded minimization of -x^2', function (t) {
+    var status = {};
+    var answer = minimize(function (x) {
+      return -x * x;
+    }, {lowerBound: -1, upperBound: 2}, status);
+    assertAlmostEqual(t, answer, 2);
+    assertAlmostEqual(t, status.argmin, 2);
+    assertAlmostEqual(t, status.minimum, -4);
+    t.ok(status.converged);
     t.end();
   });
 
@@ -40,7 +69,12 @@ test('minimize', function (t) {
   });
 
   t.test('returns answer if tolerance not met', function (t) {
-    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2); }, {tolerance: 0}), -1);
+    var status = {};
+    t.ok(isNaN(minimize(function (x) { return x * (x - 2); }, {tolerance: 0, maxIterations: 200}, status)));
+    t.equal(status.iterations, 200);
+    t.equal(status.minimum, -1);
+    assertAlmostEqual(t, status.argmin, 1);
+    t.notOk(status.converged);
     t.end();
   });
 

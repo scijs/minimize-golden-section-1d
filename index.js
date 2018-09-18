@@ -3,17 +3,27 @@
 var goldenSectionMinimize = require('./src/golden-section-minimize');
 var bracketMinimum = require('./src/bracket-minimum');
 
-module.exports = function minimize (f, options) {
+var bounds = [0, 0];
+
+module.exports = function minimize (f, options, status) {
   options = options || {};
-  var x0, bounds;
+  var x0;
   var tolerance = options.tolerance === undefined ? 1e-8 : options.tolerance;
   var dx = options.initialIncrement === undefined ? 1 : options.initialIncrement;
   var xMin = options.lowerBound === undefined ? -Infinity : options.lowerBound;
   var xMax = options.upperBound === undefined ? Infinity : options.upperBound;
-  var maxIter = options.maxIter === undefined ? 100 : options.maxIter;
+  var maxIterations = options.maxIterations === undefined ? 100 : options.maxIterations;
+
+  if (status) {
+    status.iterations = 0;
+    status.argmin = NaN;
+    status.minimum = Infinity;
+    status.converged = false;
+  }
 
   if (isFinite(xMax) && isFinite(xMin)) {
-    bounds = [xMin, xMax];
+    bounds[0] = xMin;
+    bounds[1] = xMax;
   } else {
     // Construct the best guess we can:
     if (options.guess === undefined) {
@@ -26,12 +36,12 @@ module.exports = function minimize (f, options) {
       x0 = options.guess;
     }
 
-    bounds = bracketMinimum(f, x0, dx, xMin, xMax, maxIter);
+    bracketMinimum(bounds, f, x0, dx, xMin, xMax, maxIterations);
 
     if (isNaN(bounds[0]) || isNaN(bounds[1])) {
       return NaN;
     }
   }
 
-  return goldenSectionMinimize(f, bounds[0], bounds[1], tolerance, maxIter);
+  return goldenSectionMinimize(f, bounds[0], bounds[1], tolerance, maxIterations, status);
 };

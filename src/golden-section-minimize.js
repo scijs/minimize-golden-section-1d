@@ -1,14 +1,14 @@
 'use strict';
 
-var phiRatio = 2 / (1 + Math.sqrt(5));
+var PHI_RATIO = 2 / (1 + Math.sqrt(5));
 
 module.exports = goldenSectionMinimize;
 
-function goldenSectionMinimize (f, xL, xU, tol, maxIter) {
+function goldenSectionMinimize (f, xL, xU, tol, maxIterations, status) {
   var xF, fF;
-  var n = 0;
-  var x1 = xU - phiRatio * (xU - xL);
-  var x2 = xL + phiRatio * (xU - xL);
+  var iteration = 0;
+  var x1 = xU - PHI_RATIO * (xU - xL);
+  var x2 = xL + PHI_RATIO * (xU - xL);
   // Initial bounds:
   var f1 = f(x1);
   var f2 = f(x2);
@@ -22,32 +22,38 @@ function goldenSectionMinimize (f, xL, xU, tol, maxIter) {
   var xU0 = xU;
 
   // Simple, robust golden section minimization:
-  while (++n < maxIter && Math.abs(xU - xL) > tol) {
+  while (++iteration < maxIterations && Math.abs(xU - xL) > tol) {
     if (f2 > f1) {
       xU = x2;
       x2 = x1;
       f2 = f1;
-      x1 = xU - phiRatio * (xU - xL);
+      x1 = xU - PHI_RATIO * (xU - xL);
       f1 = f(x1);
     } else {
       xL = x1;
       x1 = x2;
       f1 = f2;
-      x2 = xL + phiRatio * (xU - xL);
+      x2 = xL + PHI_RATIO * (xU - xL);
       f2 = f(x2);
     }
   }
 
-  if (n === maxIter) {
-    return 0.5 * (f1 + f2);
-  }
-
-  if (isNaN(f2) || isNaN(f1)) {
-    return NaN;
-  }
-
   xF = 0.5 * (xU + xL);
   fF = 0.5 * (f1 + f2);
+
+  if (status) {
+    status.iterations = iteration;
+    status.argmin = xF;
+    status.minimum = fF;
+    status.converged = true;
+  }
+
+  if (isNaN(f2) || isNaN(f1) || iteration === maxIterations) {
+    if (status) {
+      status.converged = false;
+    }
+    return NaN;
+  }
 
   if (f10 < fF) {
     return xL0;
