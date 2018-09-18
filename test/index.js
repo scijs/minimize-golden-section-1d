@@ -1,164 +1,185 @@
-/* global describe, it */
 'use strict';
 
-var assert = require('chai').assert;
-var almostEqual = require('almost-equal');
 var minimize = require('../');
 
-assert.almostEqual = function (computed, expected, tol) {
+var test = require('tape');
+var almostEqual = require('almost-equal');
+
+function assertAlmostEqual (t, computed, expected, tol) {
   tol = tol === undefined ? almostEqual.FLT_EPSILON : tol;
-  var ae = almostEqual(computed, expected, tol, tol);
+  t.ok(almostEqual(computed, expected, tol, tol, 'Expected ' + computed + ' to equal ' + expected + ' (±' + tol + ')'));
+}
 
-  if (!ae) {
-    throw new Error('Expected ' + computed + ' to equal ' + expected + ' (±' + tol + ')');
-  }
-};
-
-describe('minimize', function () {
-  it('Minimizes 1 / (x - 1) in [0, 2]', function () {
-    assert.almostEqual(minimize(function (x) { return 1 / (x - 1); }, {
+test('minimize', function (t) {
+  t.test('Minimizes 1 / (x - 1) in [0, 2]', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return 1 / (x - 1); }, {
       lowerBound: 0,
       upperBound: 2
     }), 1);
+    t.end();
   });
 
-  it('Minimizes -1 / (x - 1) in [0, 2]', function () {
-    assert.almostEqual(minimize(function (x) { return -1 / (x - 1); }, {
+  t.test('Minimizes -1 / (x - 1) in [0, 2]', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return -1 / (x - 1); }, {
       lowerBound: 0,
       upperBound: 2
     }), 1);
+    t.end();
   });
 
-  it('Minimizes sqrt(x) in [0, inf)', function () {
-    assert.almostEqual(minimize(Math.sqrt, {
+  t.test('Minimizes sqrt(x) in [0, inf)', function (t) {
+    assertAlmostEqual(t, minimize(Math.sqrt, {
       lowerBound: 0
     }), 0);
+    t.end();
   });
 
-  it('Minimizes sqrt(|x|) in (-inf, inf)', function () {
-    assert.almostEqual(minimize(function (x) { return Math.sqrt(Math.abs(x)); }), 0);
+  t.test('Minimizes sqrt(|x|) in (-inf, inf)', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return Math.sqrt(Math.abs(x)); }), 0);
+    t.end();
   });
 
-  it('returns answer if tolerance not met', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2); }, {tolerance: 0}), -1);
+  t.test('returns answer if tolerance not met', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2); }, {tolerance: 0}), -1);
+    t.end();
   });
 
-  it('minimizes a x(x-2) in (-inf, inf)', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2); }), 1);
+  t.test('minimizes a x(x-2) in (-inf, inf)', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2); }), 1);
+    t.end();
   });
 
-  it('minimizes x(x-2) in [-6, inf)', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2); }, {
+  t.test('minimizes x(x-2) in [-6, inf)', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2); }, {
       lowerBound: -6
     }), 1);
+    t.end();
   });
 
-  it('minimizes x(x-2) in (-inf, -6]', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2); }, {
+  t.test('minimizes x(x-2) in (-inf, -6]', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2); }, {
       upperBound: -6
     }), -6);
+    t.end();
   });
 
-  it('minimizes x(x-2) in [6, inf)', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2); }, {
+  t.test('minimizes x(x-2) in [6, inf)', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2); }, {
       lowerBound: 6
     }), 6);
+    t.end();
   });
 
-  it('minimizes x(x-2) in [5, 6]', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2); }, {
+  t.test('minimizes x(x-2) in [5, 6]', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2); }, {
       lowerBound: 5,
       upperBound: 6
     }), 5);
+    t.end();
   });
 
-  it('minimizes a cubic', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2) * (x - 1); }, {
+  t.test('minimizes a cubic', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2) * (x - 1); }, {
       lowerBound: 0,
       upperBound: 3
     }), (3 + Math.sqrt(3)) / 3);
+    t.end();
   });
 
-  it('minimizes a cubic', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2) * (x - 1); }, {
+  t.test('minimizes a cubic', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2) * (x - 1); }, {
       lowerBound: -3,
       upperBound: 3
     }), -3);
+    t.end();
   });
 
-  it('maximizes a cubic', function () {
-    assert.almostEqual(minimize(function (x) { return -(x * (x - 2) * (x - 1)); }, {
+  t.test('maximizes a cubic', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return -(x * (x - 2) * (x - 1)); }, {
       lowerBound: 0,
       upperBound: 3
     }), 3);
+    t.end();
   });
 
-  it('minimizes a cubic against bounds', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2) * (x - 1); }, {
+  t.test('minimizes a cubic against bounds', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2) * (x - 1); }, {
       lowerBound: 5,
       upperBound: 6
     }), 5);
+    t.end();
   });
 
-  it('minimizes a cubic against one bound', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2) * (x - 1); }, {
+  t.test('minimizes a cubic against one bound', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2) * (x - 1); }, {
       lowerBound: 5
     }), 5);
+    t.end();
   });
 
-  it('fails to minimize a cubic with no bounds', function () {
-    assert.isNaN(minimize(function (x) { return x * (x - 2) * (x - 1); }));
+  t.test('fails to minimize a cubic with no bounds', function (t) {
+    t.ok(isNaN(minimize(function (x) { return x * (x - 2) * (x - 1); })));
+    t.end();
   });
 
-  it('minimizes a parabola with small starting increment', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2); }, {
+  t.test('minimizes a parabola with small starting increment', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2); }, {
       guess: 0,
       initialIncrement: 1e-4
     }), 1);
+    t.end();
   });
 
-  it('minimizes a parabola with small starting increment and bounds', function () {
-    assert.almostEqual(minimize(function (x) { return x * (x - 2); }, {
+  t.test('minimizes a parabola with small starting increment and bounds', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x * (x - 2); }, {
       guess: 0,
       lowerBound: 0,
       upperBound: 1,
       initialIncrement: 1e-4
     }), 1);
+    t.end();
   });
 
-  it('minimizes cosine', function () {
-    assert.almostEqual(Math.cos(minimize(Math.cos)), -1);
+  t.test('minimizes cosine', function (t) {
+    assertAlmostEqual(t, Math.cos(minimize(Math.cos)), -1);
+    t.end();
   });
 
-  it('minimizes cosine', function () {
-    assert.almostEqual(minimize(Math.cos), Math.PI);
+  t.test('minimizes cosine', function (t) {
+    assertAlmostEqual(t, minimize(Math.cos), Math.PI);
+    t.end();
   });
 
-  it('minimizes cosine', function () {
-    assert.almostEqual(minimize(Math.cos), Math.PI);
+  t.test('minimizes cosine', function (t) {
+    assertAlmostEqual(t, minimize(Math.cos), Math.PI);
+    t.end();
   });
 
-  it('minimizes cosine', function () {
-    assert.almostEqual(minimize(Math.cos, {lowerBound: 0, upperBound: 1}), 1);
+  t.test('minimizes cosine', function (t) {
+    assertAlmostEqual(t, minimize(Math.cos, {lowerBound: 0, upperBound: 1}), 1);
+    t.end();
   });
 
-  it('minimizes cosine', function () {
-    assert.almostEqual(minimize(Math.cos, {guess: -3}), -Math.PI);
+  t.test('minimizes cosine', function (t) {
+    assertAlmostEqual(t, minimize(Math.cos, {guess: -3}), -Math.PI);
+    t.end();
   });
 
-  it('minimizes sine', function () {
-    assert.almostEqual(minimize(Math.sin), -Math.PI * 0.5);
+  t.test('minimizes sine', function (t) {
+    assertAlmostEqual(t, minimize(Math.sin), -Math.PI * 0.5);
+    t.end();
   });
 
-  it('minimizes a line', function () {
-    assert.almostEqual(minimize(function (x) { return x; }, {
+  t.test('minimizes a line', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return x; }, {
       lowerBound: 0.5,
       upperBound: 1
     }), 0.5);
+    t.end();
   });
 
-  it('minimizes a cusp', function () {
-    assert.almostEqual(minimize(function (x) { return Math.sqrt(Math.abs(x - 5)); }), 5);
+  t.test('minimizes a cusp', function (t) {
+    assertAlmostEqual(t, minimize(function (x) { return Math.sqrt(Math.abs(x - 5)); }), 5);
+    t.end();
   });
 });
-
