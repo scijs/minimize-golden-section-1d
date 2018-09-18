@@ -4,7 +4,7 @@
   "description": "minimize-golden-section-1d",
   "main": "index.js",
   "scripts": {
-    "test": "semistandard && mocha"
+    "test": "semistandard && node test/"
   },
   "repository": {
     "type": "git",
@@ -23,8 +23,7 @@
   "license": "MIT",
   "devDependencies": {
     "almost-equal": "^1.1.0",
-    "chai": "^3.5.0",
-    "mocha": "^2.4.5",
-    "semistandard": "^7.0.5"
+    "semistandard": "^12.0.1",
+    "tape": "^4.9.1"
   }
 }

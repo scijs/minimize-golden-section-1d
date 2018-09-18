@@ -16,10 +16,10 @@ function goldenSectionMinimize (f, xL, xU, tol, maxIter) {
   // Store these values so that we can return these if they're better.
   // This happens when the minimization falls *approaches* but never
   // actually reaches one of the bounds
-  var f1_0 = f(xL);
-  var f2_0 = f(xU);
-  var xL_0 = xL;
-  var xU_0 = xU;
+  var f10 = f(xL);
+  var f20 = f(xU);
+  var xL0 = xL;
+  var xU0 = xU;
 
   // Simple, robust golden section minimization:
   while (++n < maxIter && Math.abs(xU - xL) > tol) {
@@ -49,10 +49,10 @@ function goldenSectionMinimize (f, xL, xU, tol, maxIter) {
   xF = 0.5 * (xU + xL);
   fF = 0.5 * (f1 + f2);
 
-  if (f1_0 < fF) {
-    return xL_0;
-  } else if (f2_0 < fF) {
-    return xU_0;
+  if (f10 < fF) {
+    return xL0;
+  } else if (f20 < fF) {
+    return xU0;
   } else {
     return xF;
   }
